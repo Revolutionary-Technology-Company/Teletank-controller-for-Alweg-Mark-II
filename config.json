@@ -1,4 +1,52 @@
 {
+  "modern_profile_metadata": {
+    "framework_standard": "NATO Ground Vehicle Architecture (NGVA)",
+    "autonomy_engine": "Rheinmetall PATH A-Kit Middleware Integration",
+    "target_platform_bridge": "Alweg Mark II Monorail",
+    "redundancy_level": "Triple-Dissimilar (Samsara Cloud + Chrysler Aerospace + PATH Edge)"
+  },
+  "drive_by_wire_translation": {
+    "engine_interface": "GE 700V Traction Loop Digital Emulation",
+    "ngva_throttle_mapping": {
+      "0_to_15_percent": { "ge_hardware_step": 0, "state": "COAST", "relay_bit": "TRANSMISSION_NEUTRAL" },
+      "16_to_45_percent": { "ge_hardware_step": 1, "state": "SERIES", "relay_bit": "TRANSMISSION_DRIVE" },
+      "46_to_80_percent": { "ge_hardware_step": 2, "state": "SERIES_PARALLEL", "relay_bit": "TRANSMISSION_DRIVE" },
+      "81_to_100_percent": { "ge_hardware_step": 3, "state": "FULL_PARALLEL", "relay_bit": "TRANSMISSION_DRIVE" }
+    }
+  },
+  "active_sensor_fusion_payload": {
+    "perception_layer": {
+      "primary_sensor": "Solid-State LiDAR Arrays (Bogie Mounted)",
+      "secondary_sensor": "AESA 3D Track Radar (Front Hatch Mount)",
+      "target_variable": "LIDAR_OBSTACLE_AVOID",
+      "action_on_detection": "Execute software-controlled s-curve deceleration profiles to preserve Westinghouse brakes."
+    },
+    "attitude_estimation": {
+      "source": "Chrysler Sealed Guidance IMU + PATH Internal Kalman Filter",
+      "ngva_target_bit": "ACTIVE_STABILIZATION",
+      "closed_loop_response": {
+        "input_trigger": "lateral_g_force > 0.15g",
+        "actuation_target": "Fitted Fluid Pumps via Tele-tanks",
+        "proportional_gain": "Pump rate linearly scaled to lateral force value"
+      }
+    }
+  },
+  "cyber_safety_and_failsafes": {
+    "watchdog_parameters": {
+      "protocol": "Data Distribution Service (DDS) Exclusive Ownership",
+      "heartbeat_register_bit": "NETWORK_HEARTBEAT",
+      "timeout_tolerance_ms": 100.0,
+      "unresolved_timeout_action": {
+        "step_1": "Enforce PathAutonomyProcessor hardware lockout loop.",
+        "step_2": "Drop 24V safety circuit power to empty Westinghouse brake pipe lines.",
+        "step_3": "Transmit emergency status data over Samsara backhaul arrays."
+      }
+    },
+    "kinetic_lockout": {
+      "control_bit": "HUMAN_IN_THE_LOOP",
+      "enforcement": "All physical railcar lane switching or manual track modifications require remote operator token verification."
+    }
+  },
   "profile_metadata": {
     "target_hardware": "Alweg Mark II Monorail",
     "design_year": 1961,
