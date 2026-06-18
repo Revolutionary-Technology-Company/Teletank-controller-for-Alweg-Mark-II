@@ -101,6 +101,59 @@
       "max_latency_allowed": 100.0,
       "action_on_timeout": "Drop WATCHDOG_BIT, halt execution loop, engage Westinghouse spring shoes."
     }
+  },
+  "enterprise_expansion_modules": {
+    "subsystem_hardware_ports": {
+      "ge_fiber_channel_node": "FC_PORT_01_TACTICAL_BACKBONE",
+      "sip_communications_hub": "SIP_VOIP_GATEWAY_NODE",
+      "swisscode_climate_deck": "SWISSCODE_COACH_AC_RELAY_BUS",
+      "ac_delco_nosepiece_pump": "AC_DELCO_HEADLIGHT_COOLING_COIL"
+    },
+    "mechanical_actuator_registry": {
+      "track_anchor_pulley": "PULLEY_ENGAGE_COIL",
+      "bogie_track_disengage": "TRACK_COMPONENT_DISENGAGE_VALVE",
+      "tire_change_jack": "TIRE_CHANGING_MODULE_SOLENOID",
+      "cargo_bay_latches": "CARGO_BELOW_MODULE_LOCKS"
+    }
+  },
+  "tourism_mode_landmark_matrix": [
+    {
+      "landmark_id": "LM_01_SPACE_NEEDLE_VIEWPOINT",
+      "gps_coordinates": { "latitude": 47.62051, "longitude": -122.34932 },
+      "trigger_radius_meters": 50.0,
+      "tourism_profile_execution": {
+        "target_speed_mph": 8,
+        "ge_propulsion_step": 1,
+        "swisscode_coach_ac_percentage": 100.0,
+        "force_express_wind_mode": true,
+        "fan_charged_turbo_module": true,
+        "ge_fiber_channel_stream": "ACTIVE_TOUR_DATA_ON"
+      }
+    },
+    {
+      "landmark_id": "LM_02_AMAZON_SPHERES_CORRIDOR",
+      "gps_coordinates": { "latitude": 47.61512, "longitude": -122.33954 },
+      "trigger_radius_meters": 35.0,
+      "tourism_profile_execution": {
+        "target_speed_mph": 12,
+        "ge_propulsion_step": 1,
+        "swisscode_coach_ac_percentage": 85.0,
+        "force_express_wind_mode": false,
+        "fan_charged_turbo_module": false,
+        "ge_fiber_channel_stream": "ACTIVE_TOUR_DATA_ON"
+      }
+    }
+  ],
+  "express_transit_profile": {
+    "smooth_rail_express_mode": {
+      "activation_trigger": "VS_03_DENNY_STRAIGHTAWAY",
+      "sequence": {
+        "step_1": "Verify cargo bay latches locked via CARGO_BELOW_MODULE_LOCKS.",
+        "step_2": "Actuate PULLEY_ENGAGE_COIL to pull car secure from track anchor.",
+        "step_3": "Fire TRACK_COMPONENT_DISENGAGE_VALVE to retract passive horizontal tires.",
+        "step_4": "Ramp AC_DELCO_HEADLIGHT_COOLING_COIL to max power to protect front headlights.",
+        "step_5": "Engage GE Propulsion Step 3 for smooth rail high-speed express operation."
+      }
+    }
   }
 }
-
