@@ -155,5 +155,20 @@
         "step_5": "Engage GE Propulsion Step 3 for smooth rail high-speed express operation."
       }
     }
+  },
+  "shuttle_hardware_io_extensions": {
+    "lighting_array_relays": {
+      "headlight_high_beams": "0x00002000",
+      "marker_running_lights": "0x00004000",
+      "emergency_cabin_blinkers": "0x00008000"
+    },
+    "platform_and_power_interlocks": {
+      "platform_gate_solenoid_enable": "0x00010000",
+      "high_voltage_substation_breaker": "0x00020000",
+      "station_docking_bumper_clamps": "0x00080000"
+    },
+    "safety_monitoring_nodes": {
+      "alweg_beam_tire_tpms_bus": "0x00040000"
+    }
   }
 }
