@@ -1,0 +1,25 @@
+name: Enterprise Profile Verification
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    - name: Setup Python Environment
+      uses: actions/setup-python@v5
+      with:
+        python-node: '3.11'
+
+    - name: Run Kinematic Safety Checks
+      run: |
+        python .github/scripts/validate_alweg_bounds.py
+
