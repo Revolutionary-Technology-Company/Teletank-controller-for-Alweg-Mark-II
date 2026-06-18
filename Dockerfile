@@ -26,4 +26,8 @@ EXPOSE 5005
 
 # Execute the simulation harness inside the headless container by default
 CMD ["python3", "test_telemetry_injector.py"]
+# Run the Endianness test, then the Urban test, and fire the cleanup script automatically
+CMD python3 -m unittest tests/test_network_endianness.py && \
+    python3 -m unittest tests/test_monorail_safety.py && \
+    chmod +x ./scripts/cleanup_test_env.sh && ./scripts/cleanup_test_env.sh
 
