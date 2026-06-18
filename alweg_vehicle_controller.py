@@ -3,6 +3,46 @@ import socket
 import struct
 import time
 import math
+# Import the asynchronous components into your main controller script
+import asyncio
+import threading
+from subsystems.chevrolet_turnstile_api import ChevroletTurnstileServer
+
+class AlwegMarkIIAutomation:
+    def __init__(self, config_path="config.json"):
+        # ... Your existing configuration loading and UDP setup here ...
+        
+        # Initialize turnstile networking server instance on port 8081
+        self.turnstile_api = ChevroletTurnstileServer()
+        self.async_loop = asyncio.new_event_loop()
+        
+        # Spin up the turnstile network listener on a background thread so it doesn't block propulsion
+        self.server_thread = threading.Thread(
+            target=self._run_async_server, 
+            args=(self.async_loop,), 
+            daemon=True
+        )
+        self.server_thread.start()
+
+    def _run_async_server(self, loop):
+        asyncio.set_event_loop(loop)
+        self.turnstile_api.start_server_loop(loop)
+        loop.run_forever()
+
+    def process_route_tracking(self, sensor_id):
+        """Call this function when a virtual sensor bounds is broken."""
+        if sensor_id in ["VS_00_WESTLAKE_GATE", "VS_06_SEATTLE_CENTER_GATE"]:
+            # Trigger non-blocking asynchronous turnstile release broadcast
+            asyncio.run_coroutine_threadsafe(
+                self.turnstile_api.broadcast_gate_validation(sensor_id, "TRAIN_REACHED_PLATFORM"),
+                self.async_loop
+            )
+        elif sensor_id == "VS_01_GAUNTLET_ENTRY":
+            # Train has left station; lock turnstiles automatically
+            asyncio.run_coroutine_threadsafe(
+                self.turnstile_api.broadcast_gate_validation(sensor_id, "TRAIN_DEPARTED"),
+                self.async_loop
+            )
 
 # Universal Low-Level Teletank Bitmasks matching your C++ Univac core
 class TeletankBits:
