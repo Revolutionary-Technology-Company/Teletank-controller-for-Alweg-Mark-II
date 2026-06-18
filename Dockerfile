@@ -73,3 +73,18 @@ CMD python3 -m unittest tests/test_network_endianness.py && \
     python3 -m unittest tests/test_monorail_safety.py && \
     chmod +x ./scripts/cleanup_test_env.sh && ./scripts/cleanup_test_env.sh
 
+RUN echo '#!/bin/bash\n\
+echo "⚙️ Initializing low-level industrial hardware drivers..."\n\
+modprobe qla2xxx 2>/dev/null || echo "⚠️ Host driver mismatch; relying on pass-through PCI mapping."\n\
+\n\
+echo "📊 Executing Automated Fibre Channel Network Integrity Diagnostics..."\n\
+python3 -m unittest tests/test_fibre_channel_integrity.py\n\
+\n\
+if [ $? -eq 0 ]; then\n\
+    echo "✅ DIAGNOSTICS PASSED: Hardware backbone stable. Booting Monorail Automation Application..."\n\
+    exec python3 alweg_vehicle_controller.py\n\
+else\n\
+    echo "💥 CRITICAL DIAGNOSTIC ERROR: Fibre Channel degradation detected. Automation inhibited for safety."\n\
+    exit 1\n\
+fi\n\
+' > /opt/revolutionary_technology/entrypoint.sh && chmod +x /opt/revolutionary_technology/entrypoint.sh
