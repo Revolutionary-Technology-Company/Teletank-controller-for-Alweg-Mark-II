@@ -1,0 +1,58 @@
+{
+  "profile_metadata": {
+    "target_hardware": "Alweg Mark II Monorail",
+    "design_year": 1961,
+    "integration_layer": "Univac-Aegis-Bridge Teletank Core",
+    "track_distance_miles": 0.9,
+    "train_length_feet": 122.0
+  },
+  "propulsion_mapping": {
+    "engine_type": "General Electric 700V DC Traction Loops",
+    "control_mechanism": "Electromechanical Cam Contactor Relay Steps",
+    "bitmask_value_mapping": [
+      { "step": 0, "state_name": "COAST", "description": "Resistor banks open circuit" },
+      { "step": 1, "state_name": "SERIES", "description": "Maximum resistance - Curve execution & station docking speed" },
+      { "step": 2, "state_name": "SERIES_PARALLEL", "description": "Medium resistance - Straightaway mid-line acceleration" },
+      { "step": 3, "state_name": "FULL_PARALLEL", "description": "Zero resistance - Max line speed (45 mph governed)" }
+    ]
+  },
+  "pneumatic_braking_mapping": {
+    "system_architecture": "Westinghouse Air Brake Pipe Network",
+    "nominal_pressure_psi": 90.0,
+    "service_brake_range_psi": { "min_application": 85.0, "full_application": 60.0 },
+    "emergency_dump_solenoid": {
+      "univeral_bitmask_register": "SAFETY_TRIP_MASK",
+      "hardware_state": "Normally energized 24V DC loop. Dropping bit dumps brake pipe to 0 PSI instantly."
+    }
+  },
+  "ballast_tele_tank_mapping": {
+    "balancing_mechanism": "Active Liquid Leveling Tele-Tank Layout",
+    "fluid_type": "Hydraulic Ballast Medium",
+    "hardware_actuation": {
+      "valve_left_bit": "VALVE_LEFT_MASK",
+      "valve_right_bit": "VALVE_RIGHT_MASK",
+      "pump_relay_bit": "AUX_PUMP_MASK"
+    },
+    "analog_input_translation": {
+      "source_hardware": "Chrysler Sealed Aerospace Gyroscope Connector",
+      "voltage_to_kinematic_scale": {
+        "roll_degrees": "raw_synchro_roll_volts * 0.005",
+        "pitch_degrees": "raw_synchro_pitch_volts * 0.005",
+        "lateral_g_force": "lateral_g_accelerometer * 0.001"
+      }
+    }
+  },
+  "kinematic_safety_limits": {
+    "samsara_dual_gateway_sync": {
+      "front_node_id": "SAMSARA_AG_CAR1",
+      "rear_node_id": "SAMSARA_AG_CAR4",
+      "max_spatial_drift_feet": 8.0,
+      "description": "Trigger emergency trip if distance delta deviates past 114-130 foot bounds."
+    },
+    "high_speed_watchdog_ms": {
+      "max_latency_allowed": 100.0,
+      "action_on_timeout": "Drop WATCHDOG_BIT, halt execution loop, engage Westinghouse spring shoes."
+    }
+  }
+}
+
