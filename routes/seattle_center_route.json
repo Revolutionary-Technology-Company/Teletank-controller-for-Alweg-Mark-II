@@ -1,0 +1,59 @@
+{
+  "route_metadata": {
+    "system_name": "Seattle Center Monorail - Enterprise Transit Profile",
+    "track_geometry": "Dual Elevated Straddle Beams (Red East / Blue West)",
+    "total_distance_miles": 0.90,
+    "virtual_sensor_standard": "NATO Ground Vehicle Architecture (NGVA) Compatible"
+  },
+  "geofenced_virtual_sensors": [
+    {
+      "sensor_id": "VS_00_WESTLAKE_GATE",
+      "gps_coordinates": { "latitude": 47.61152, "longitude": -122.33704 },
+      "zone_type": "Terminal Platform & Turnstile Trigger",
+      "speed_limit_mph": 0,
+      "functional_logic": "Initialize platform software. Enable Chevrolet turnstile token validations."
+    },
+    {
+      "sensor_id": "VS_01_GAUNTLET_ENTRY",
+      "gps_coordinates": { "latitude": 47.61215, "longitude": -122.33732 },
+      "zone_type": "Critical Clearance S-Curve Hazard",
+      "speed_limit_mph": 5,
+      "functional_logic": "Squeeze sector check. Interlock speed if sister vehicle is detected in boundary zone."
+    },
+    {
+      "sensor_id": "VS_02_STEWART_INTERCEPT",
+      "gps_coordinates": { "latitude": 47.61304, "longitude": -122.33801 },
+      "zone_type": "90-Degree Right Turning Bend",
+      "speed_limit_mph": 14,
+      "functional_logic": "Pre-load Chrysler stabilizers. Fire fitted hydraulic pumps to counteract curve roll."
+    },
+    {
+      "sensor_id": "VS_03_DENNY_STRAIGHTAWAY",
+      "gps_coordinates": { "latitude": 47.61589, "longitude": -122.34142 },
+      "zone_type": "High-Speed Acceleration Corridor",
+      "speed_limit_mph": 45,
+      "functional_logic": "Ramp GE motors to step 3 (Full Parallel). Monitor weather station wind vectors."
+    },
+    {
+      "sensor_id": "VS_04_BATTERY_COAST_ZONE",
+      "gps_coordinates": { "latitude": 47.61790, "longitude": -122.34388 },
+      "zone_type": "Power-Saving Coordinated Coast Area",
+      "speed_limit_mph": 45,
+      "functional_logic": "Drop GE traction loops to step 0 (Coast). Rely on vehicle momentum."
+    },
+    {
+      "sensor_id": "VS_05_MOPOP_MUSEUM_INTERSECT",
+      "gps_coordinates": { "latitude": 47.62145, "longitude": -122.34812 },
+      "zone_type": "Architectural Structural Curve",
+      "speed_limit_mph": 15,
+      "functional_logic": "Apply service braking profile. Pre-align ballast tanks for indoor structural transition."
+    },
+    {
+      "sensor_id": "VS_06_SEATTLE_CENTER_GATE",
+      "gps_coordinates": { "latitude": 47.62201, "longitude": -122.35105 },
+      "zone_type": "Terminal Platform & Under-Bay Pit",
+      "speed_limit_mph": 0,
+      "functional_logic": "Spanish-solution door configuration launch. Engage maintenance interlock loops overnight."
+    }
+  ]
+}
