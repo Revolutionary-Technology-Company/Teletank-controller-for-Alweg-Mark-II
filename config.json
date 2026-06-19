@@ -170,5 +170,22 @@
     "safety_monitoring_nodes": {
       "alweg_beam_tire_tpms_bus": "0x00040000"
     }
+  },
+  "rover_sensor_payload_matrix": {
+    "environmental_telemetry": {
+      "humidity_tester_node": "SENS_HUMID_01",
+      "temperature_sensor_node": "SENS_TEMP_02",
+      "barometric_pressure_node": "SENS_BARO_03",
+      "shock_sensor_accelerometer": "SENS_SHOCK_04"
+    },
+    "multimedia_streaming_nodes": {
+      "optical_camera_feed": "/dev/video0",
+      "acoustic_microphone_feed": "/dev/snd/pcmC0D0c",
+      "intercom_speaker_bus": "/dev/snd/pcmC0D0p"
+    },
+    "safety_thresholds": {
+      "max_allowable_vibration_shock_g": 4.5,
+      "max_allowable_temperature_c": 60.0
+    }
   }
 }
