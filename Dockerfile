@@ -1,6 +1,7 @@
 # =======================================================================
 # REVOLUTIONARY TECHNOLOGY COMPANY - ENTERPRISE AUTOMATION CORE
-# Target Platform: WAGO PFC / openPLC Real-Time Linux Industrial Kernels
+# Target Platform: WAGO PFC / openPLC / Embedded Industrial Linux
+# Subsystem: Multimedia Pass-Through & Hardware Mapping
 # =======================================================================
 
 # Use a hardened Linux base image for industrial runtime stability
@@ -10,7 +11,7 @@ FROM python:3.11-slim-bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
-# Install runtime dependencies and utilities required for low-level network components
+# Install runtime dependencies, utilities, and hardware audio drivers
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -18,6 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     kmod \
     pciutils \
     libgomp1 \
+    alsa-utils \
+    libasound2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install the standard Modbus TCP protocol master package via pip
@@ -36,15 +39,13 @@ COPY scripts/ ./scripts/
 COPY tests/ ./tests/
 
 # Inform the hardware platform that our communication pipelines use these designated ports
-# 5005: Primary UDP, 8081: Chevrolet WebSocket, 502: Modbus TCP Input Register Port
 EXPOSE 5005 8081 502
 
 # HARDWARE DEPLOYMENT ROUTINE GENERATOR:
-# Constructs the headless initialization script to probe and bind physical 
-# hardware layers before passing control to the uncrewed shuttle automation.
+# Probes host system modules, maps Fibre Channel, validates network integrity, 
+# and runs parallel fallback daemons before launching the main vehicle logic.
 RUN echo '#!/bin/bash\n\
 echo "⚙️ Initializing low-level industrial hardware drivers..."\n\
-# Probe host system for Fibre Channel card nodes (e.g., Systran / QLogic loops)\n\
 modprobe qla2xxx 2>/dev/null || echo "⚠️ Host driver mismatch; relying on pass-through PCI mapping."\n\
 \n\
 echo "📊 Executing Automated Fibre Channel Network Integrity Diagnostics..."\n\
@@ -64,7 +65,7 @@ else\n\
 fi\n\
 ' > /opt/revolutionary_technology/entrypoint.sh && chmod +x /opt/revolutionary_technology/entrypoint.sh
 
-# Run the system tests and fire the cleanup script automatically during image validation runs
+# Run system verification suites automatically during image validation phases
 RUN python3 -m unittest tests/test_network_endianness.py && \
     python3 -m unittest tests/test_monorail_safety.py && \
     chmod +x ./scripts/cleanup_test_env.sh && ./scripts/cleanup_test_env.sh
