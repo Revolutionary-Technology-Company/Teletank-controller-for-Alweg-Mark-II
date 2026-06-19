@@ -4,7 +4,7 @@ This repository acts as the **Headless Vehicle Abstraction and Conversion Layer*
 
 ---
 
-## 🏗️ System Architecture Mapping
+## System Architecture Mapping
 
 Control operations are decoupled across an enterprise-supported pipeline:
 
@@ -14,7 +14,7 @@ Control operations are decoupled across an enterprise-supported pipeline:
 
 ---
 
-## 🎛️ Master 32-Bit Control Register Matrix
+## Master 32-Bit Control Register Matrix
 
 The onboard UNIVAC typewriter terminal operates on a synchronous 32-bit parallel data format. Every subsystem command maps to a specific bit parameter within the hardware bus:
 
@@ -61,11 +61,11 @@ The onboard UNIVAC typewriter terminal operates on a synchronous 32-bit parallel
 
 ---
 
-## 📁 Repository Directory Structure
+## Repository Directory Structure
 
 Teletank-controller-for-Alweg-Mark-II/├── config.json                     # Physical configuration parameters and boundaries├── alweg_vehicle_controller.py      # Core vehicle state tracking and translation logic├── test_telemetry_injector.py       # Headless simulator tracing the 0.9-mile route├── Dockerfile                      # Production deployment container definition│├── routes/│   ├── seattle_center_route.json   # GPS coordinates mapping virtual sensors and tourism zones│   └── route_parser.py             # Geo-spatial Haversine proximity evaluation module│├── subsystems/│   ├── chevrolet_turnstile_api.py  # Asynchronous WebSocket server broadcasting turnstile transaction frames│   └── gm_shuttle_logic.st         # Pure Structured Text design blueprint for physical safety PLCs│├── scripts/│   └── cleanup_test_env.sh         # Maintenance shell script purging container log and caching tracks│└── tests/├── test_monorail_safety.py      # Validation file asserting Urban Canyon GPS drift interlocks├── test_network_endianness.py   # Socket validation file auditing Big Endian wire format byte alignment└── test_fibre_channel_integrity.py # Diagnostic script stress-testing GE Fibre Channel throughput
 
-## 🚀 Development & Headless Testing
+## Development & Headless Testing
 
 All code validation is built to execute headlessly via the standard command line toolchain.
 
