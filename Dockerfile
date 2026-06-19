@@ -88,3 +88,18 @@ else\n\
     exit 1\n\
 fi\n\
 ' > /opt/revolutionary_technology/entrypoint.sh && chmod +x /opt/revolutionary_technology/entrypoint.sh
+# Update entrypoint to execute the primary controller and local fallback parallelly
+RUN echo '#!/bin/bash\n\
+echo "⚙️ Initializing low-level industrial hardware drivers..."\n\
+modprobe qla2xxx 2>/dev/null || echo "⚠️ Host driver mismatch."\n\
+\n\
+echo "📊 Executing Automated Diagnostics..."\n\
+python3 -m unittest tests/test_fibre_channel_integrity.py\n\
+\n\
+echo "🚀 Booting Multi-Generational Automation Stack..."\n\
+# Spin up the local telemechanical fallback loop concurrently on a background core\n\
+python3 subsystems/local_telemechanical_fallback.py &\n\
+\n\
+# Launch primary train vehicle controller\n\
+exec python3 alweg_vehicle_controller.py\n\
+' > /opt/revolutionary_technology/entrypoint.sh
