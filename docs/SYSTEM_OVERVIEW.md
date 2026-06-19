@@ -13,5 +13,8 @@ The control platform decouples real-time high-speed navigation from localized ph
 *   **Tier 5: Locomotion & Pneumatic Braking** — Direct interface lines to 1961 General Electric 700V DC traction motors and the Westinghouse air brake pipe network.
 
 ## 3. Data Flow Topology
+[ Samsara Dual GPS / Cloud ] ──► [ Python Route Engine ] ──► [ Chevrolet Turnstile API ]│▼ (UDP / Port 5005 Binary Struct)[ Chrysler Aerospace IMU ] ────► [ Univac-Aegis Bridge ] ──► [ UNIVAC Typewriter IO Bus ]│▼ (Parallel Bit Changes)[ Alweg Mark II Train ]
 
-
+1. The train script tracks geospatial location via Samsara and Chrysler sensors.
+2. If track boundaries are crossed, it pushes WebSocket frames to release Chevrolet platform turnstiles.
+3. Simultaneously, it sends raw integer bitmasks over a high-speed local UDP loop (Port 5005) to the `Univac-Aegis-bridge` server to actuate physical relays.
