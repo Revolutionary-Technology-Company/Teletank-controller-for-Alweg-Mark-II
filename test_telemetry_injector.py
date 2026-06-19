@@ -2,6 +2,47 @@
 import time
 import sys
 from alweg_vehicle_controller import AlwegMarkIIAutomation
+from subsystems.telemetry_logger import HeadlessTelemetryLogger
+
+def run_visual_headless_simulation():
+    # Instantiate both the processing controller and the terminal wrapper
+    controller = AlwegMarkIIAutomation()
+    terminal_ui = HeadlessTelemetryLogger()
+
+    # Modeled layout steps traversing waypoints
+    timeline = [
+        {"id": "VS_00_WESTLAKE_GATE", "speed": 0,  "temp": 22.1, "humid": 55.0, "press": 1013.2, "shock": 0.02, "dur": 2},
+        {"id": "VS_01_GAUNTLET_ENTRY", "speed": 5,  "temp": 23.4, "humid": 55.4, "press": 1013.1, "shock": 0.85, "dur": 2},
+        {"id": "VS_02_STEWART_INTERCEPT", "speed": 14, "temp": 24.0, "humid": 56.1, "press": 1012.9, "shock": 1.45, "dur": 3},
+        {"id": "VS_03_DENNY_STRAIGHTAWAY", "speed": 45, "temp": 28.9, "humid": 58.0, "press": 1012.4, "shock": 0.22, "dur": 4},
+        {"id": "CRITICAL_TRACK_IMPACT_EVENT", "speed": 35, "temp": 31.2, "humid": 58.2, "press": 1012.3, "shock": 5.12, "dur": 2}, # Exceeds 4.5G limits
+        {"id": "VS_06_SEATTLE_CENTER_GATE", "speed": 0,  "temp": 61.5, "humid": 60.1, "press": 1011.8, "shock": 0.01, "dur": 3}  # Exceeds 60C limits
+    ]
+
+    for stage in timeline:
+        cycles = int(stage['dur'] * 10)
+        for _ in range(cycles):
+            # 1. Output variables directly to the terminal interface screen
+            terminal_ui.stream_metrics_to_terminal(
+                sensor_id=stage['id'],
+                speed=stage['speed'],
+                temp=stage['temp'],
+                humidity=stage['humid'],
+                pressure=stage['press'],
+                shock_g=stage['shock']
+            )
+            
+            # 2. Transmit the corresponding bitmask over the network to the Univac server
+            controller.convert_and_transmit(
+                current_velocity=stage['speed'],
+                chassis_roll=0.0,
+                current_gps_drift=0.5
+            )
+            time.sleep(0.1)
+
+if __name__ == "__main__":
+    run_visual_headless_simulation()
+
 
 def run_headless_simulation():
     print("------------------------------------------------------------")
