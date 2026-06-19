@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  monorail-automation-core:
+    image: revolutionary-teletank-controller:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: monorail-automation-core
+    restart: always
+    privileged: true
+    network_mode: host
+    
+    # Direct access to the host's hardware bus and kernel modules
+    volumes:
+      - /dev:/dev
+      - /lib/modules:/lib/modules:ro
+      
+    # Explicit hardware pass-through mappings for the Teletank rover nodes
+    devices:
+      # 1. Optical Camera Interface Pass-Through
+      - "/dev/video0:/dev/video0"
+      
+      # 2. Sound System (Microphone Capture & Speaker Intercom Bus) Pass-Through
+      - "/dev/snd:/dev/snd"
+      
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
