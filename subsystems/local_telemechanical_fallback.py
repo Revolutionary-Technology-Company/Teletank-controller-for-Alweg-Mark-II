@@ -6,6 +6,65 @@ import socket
 import logging
 from pyModbusTCP.client import ModbusClient  # Standard Python Modbus TCP Master Library
 from routes.route_parser import MonorailRouteParser
+#!/usr/bin/env python3
+import struct
+import logging
+
+class RoverTelemetryProcessor:
+    def __init__(self):
+        # Local configuration parameters matching the expanded config.json
+        self.MAX_SHOCK_G = 4.5
+        self.MAX_TEMP_C = 60.0
+        self.DROP_DEMO_BOX = 0x00100000 # Emergency Trip Bitmask
+
+    def parse_rover_sensors(self, raw_modbus_registers):
+        """
+        Headless interpreter converting raw sensor inputs into structural variables.
+        Expected Register Map:
+        - registers[0]: Temperature (Scaled: Value / 10)
+        - registers[1]: Humidity (Percentage)
+        - registers[2]: Barometric Pressure
+        - registers[3]: Shock Sensor (Max G-force registered)
+        """
+        if not raw_modbus_registers or len(raw_modbus_registers) < 4:
+            return 20.0, 50.0, 1013.25, 0.0 # Standard fallback defaults
+
+        # Unpack raw integers into engineering units
+        temperature = raw_modbus_registers[0] / 10.0
+        humidity    = float(raw_modbus_registers[1])
+        pressure    = float(raw_modbus_registers[2])
+        shock_g     = raw_modbus_registers[3] / 100.0
+
+        return temperature, humidity, pressure, shock_g
+
+    def evaluate_rover_safety(self, current_mask, temp, humidity, pressure, shock):
+        """Evaluates rover conditions and injects emergency drops if limits are breached."""
+        modified_mask = current_mask
+
+        # 1. Structural Shock / Derailment Check
+        if shock >= self.MAX_SHOCK_G:
+            logging.critical(f"💥 EXCESSIVE SHOCK DETECTED: {shock}G! Triggering emergency mechanical stop.")
+            modified_mask |= self.DROP_DEMO_BOX
+
+        # 2. Thermal Runaway Check
+        if temp >= self.MAX_TEMP_C:
+            logging.critical(f"🔥 THERMAL OVERLOAD DETECTED: {temp}°C! Inhibiting propulsion systems.")
+            modified_mask |= self.DROP_DEMO_BOX
+
+        # 3. Headless Console Telemetry Printout
+        logging.info(f"📊 Rover Stats | Temp: {temp}°C | Humid: {humidity}% | Pres: {pressure}hPa | Shock: {shock}G")
+        
+        return modified_mask
+
+if __name__ == "__main__":
+    processor = RoverTelemetryProcessor()
+    # Simulating a high-vibration event (e.g., track debris hitting the chassis)
+    # Raw registers map to: [255 (25.5C), 45 (45%), 1011 (1011 hPa), 520 (5.20G Shock)]
+    mock_registers = [255, 45, 1011, 520]
+    
+    t, h, p, s = processor.parse_rover_sensors(mock_registers)
+    final_bitmask = processor.evaluate_rover_safety(0x00000000, t, h, p, s)
+    print(f"Resulting Hardware Bitmask State: {hex(final_bitmask)}")
 
 # Re-defining the Universal Teletank Bitmasks locally to keep the script 100% self-contained
 class TeletankBits:
